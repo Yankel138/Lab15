@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lab15
+namespace Lab15_2_
 {
     class Program
     {
         static void Main(string[] args)
         {
-            //Небольшой интерактив
             Console.Write("Введите начальное значение прогрессии:");
             int start = Convert.ToInt32(Console.ReadLine());
             Console.Write("Введите шаг прогрессии:");
@@ -23,9 +22,9 @@ namespace Lab15
             ap.SetStep(step);
             for (int i = 0; i < 10; i++)
             {
-                Console.Write(ap.GetNext() + " "); //Раз уж не воид, иначе зачем вообще возвращать что-то. Ну можно было в массив еще записать
+                Console.Write(ap.GetNext() + " "); 
             }
-            ap.Reset(); //Не нравится как сюда вписывается, но нужна была проверка метода сброса
+            ap.Reset(); 
             #endregion
 
             #region Геометрическая
@@ -47,68 +46,56 @@ namespace Lab15
     interface ISeries
     {
         void SetStart(int x);
-        void SetStep(int x); // Надеюсь не страшно, захотелось добавить еще шаг...
+        void SetStep(int x); 
         int GetNext();
         void Reset();
     }
 
-    class ArithProgression : ISeries
+    public abstract class Progression : ISeries
     {
-        int start;
-        int step;
-        int current;
-        public int GetNext()
-        {
-            current += step;
-            return current;
-        }
+
+        public int Start { set; get; }
+        public int Step { set; get; }
+        public int Current { set; get; }
+
+        public abstract int GetNext();
 
         public void Reset()
         {
-            current = start;
-            Console.Write(current + " ");
+            Current = Start;
+            Console.Write(Current + " ");
         }
 
         public void SetStart(int x)
         {
-            start = x;
-            current = start;
-            Console.Write(current + " ");
+            Start = x;
+            Current = Start;
+            Console.Write(Current + " ");
         }
 
         public void SetStep(int x)
         {
-            step = x;
+            Step = x;
         }
     }
-
-    class GeomProgression : ISeries
+    public class ArithProgression : Progression
     {
-        int start;
-        int step;
-        int current;
-        public int GetNext()
+
+        public override int GetNext()
         {
-            current *= step;
-            return current;
+            Current += Step;
+            return Current;
         }
 
-        public void Reset()
-        {
-            current = start;
-            Console.Write(current + " ");
-        }
+    }
 
-        public void SetStart(int x)
+    class GeomProgression : Progression
+    {
+        public override int GetNext()
         {
-            start = x;
-            current = start;
-            Console.Write(current + " ");
-        }
-
-        public void SetStep(int x)
-        {
-            step = x;
+            Current *= Step;
+            return Current;
         }
     }
 }
+
